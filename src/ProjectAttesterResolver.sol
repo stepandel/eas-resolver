@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity 0.8.26;
 
 import {SchemaResolver} from "eas-contracts/resolver/SchemaResolver.sol";
 import {IEAS, Attestation} from "eas-contracts/IEAS.sol";
@@ -18,14 +18,14 @@ contract ProjectAttesterResolver is SchemaResolver {
 
     address public attester;
 
-    constructor(IEAS eas, address initialAttester) {
+    constructor(IEAS eas, address initialAttester) SchemaResolver(eas) {
         attester = initialAttester;
     }
 
     function onAttest(
         Attestation calldata attestation,
         uint256 /*value*/
-    ) internal view override returns (bool) {
+    ) internal override returns (bool) {
         if (attestation.attester != attester) {
             revert InvalidAttester();
         }

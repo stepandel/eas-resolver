@@ -4,11 +4,9 @@ pragma solidity ^0.8.13;
 import {Test, console} from "forge-std/Test.sol";
 import {ProjectAttesterResolver} from "../src/ProjectAttesterResolver.sol";
 import {SchemaRegistry} from "eas-contracts/SchemaRegistry.sol";
-import {EAS, Attestation} from "eas-contracts/EAS.sol";
-
-// EASRegistry
-
-// EAS
+import {EAS} from "eas-contracts/EAS.sol";
+import {AttestationRequestData, AttestationRequest} from "eas-contracts/IEAS.sol";
+import {Utils} from "test/utils/Utils.sol";
 
 contract ProjectAttesterResolverTest is Test {
     error InvalidAttester();
@@ -37,33 +35,43 @@ contract ProjectAttesterResolverTest is Test {
         );
 
         _testSchemaUID = schemaRegistry.register(
-            "test",
+            "string name, string description",
             projectAttesterResolver,
             true
         );
     }
 
     function test_Attest() public {
-        Attestation memory attestation = Attestation({
-            recipient: address(Utils.alice),
-            expirationTime: 0,
-            refUID: 0x0,
-            attester: address(this),
-            revocable: true,
-            data: ""
-        });
-
-        projectAttesterResolver.attest(attestation);
-
         vm.expectEmit();
-
         emit Attested(
-            attestation.recipient,
-            attestation.expirationTime,
-            attestation.refUID,
-            attestation.attester,
-            attestation.revocable,
-            attestation.data
+            address(Utils.alice),
+            0,
+            0x0,
+            address(this),
+            true,
+            abi.encodeWithSignature(
+                "string name, string description",
+                "Test",
+                "Test"
+            )
+        );
+
+        eas.attest(
+            AttestationRequest({
+                schema: _testSchemaUID,
+                data: AttestationRequestData({
+                    recipient: address(Utils.alice),
+                    expirationTime: 0,
+                    refUID: 0x0,
+                    revocable: true,
+                    data: abi.encodeWithSignature(
+                        "string name, string description",
+                        "Test",
+                        "Test"
+                    ),
+                    value: 0
+                })
+            })
         );
     }
 }
