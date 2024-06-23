@@ -74,4 +74,27 @@ contract ProjectAttesterResolverTest is Test {
             })
         );
     }
+
+    function test_InvalidAttester() public {
+        vm.expectRevert(InvalidAttester.selector);
+
+        vm.prank(address(Utils.alice));
+        eas.attest(
+            AttestationRequest({
+                schema: _testSchemaUID,
+                data: AttestationRequestData({
+                    recipient: address(Utils.alice),
+                    expirationTime: 0,
+                    refUID: 0x0,
+                    revocable: true,
+                    data: abi.encodeWithSignature(
+                        "string name, string description",
+                        "Test",
+                        "Test"
+                    ),
+                    value: 0
+                })
+            })
+        );
+    }
 }
