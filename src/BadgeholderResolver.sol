@@ -49,9 +49,11 @@ contract BadgeholderResolver is SchemaResolver, ERC721EASWrapper {
     }
 
     function onRevoke(
-        Attestation calldata /*attestation*/,
+        Attestation calldata attestation,
         uint256 /*value*/
-    ) internal pure override returns (bool) {
+    ) internal override returns (bool) {
+        _burn(uint256(attestation.refUID));
+
         return true;
     }
 }
