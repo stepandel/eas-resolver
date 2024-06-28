@@ -10,7 +10,7 @@ contract CreateNewEASSchemaScript is Script {
         SchemaRegistry(payable(0x0a7E2Ff54e76B8E6659aedc9103FB21c038050D0));
     ProjectAttesterResolver projectAttesterResolver =
         ProjectAttesterResolver(
-            payable(0x0a499d974ED539103a671996Dd4Bc02ef057fed7)
+            payable(0x2582FDA2Ba366a035e8Ca8b65f6dB360ccf8c5Ab)
         );
 
     function run() external {
